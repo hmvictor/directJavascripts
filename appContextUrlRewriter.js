@@ -1,6 +1,6 @@
 (function(){
   function getAppContext() {
-      return document.getUserData("appContext");
+      return document.body.dataset.appContext;
   }
   function isAbsolutUrl(url) {
       return startsWith(url, "http");
@@ -9,12 +9,12 @@
       return string.indexOf(prefix) === 0;
   }
   var proxied=XMLHttpRequest.prototype.open;
-  XMLHttpRequest.prototype.open=function(method, url, user, password) {
-    var u=url;
+  XMLHttpRequest.prototype.open=function(method, u, user, password) {
+    var url=u;
     var appContext=getAppContext();
-    if(!isAbsolutUrl(url) && !startsWith(appContext)){
-       u=appContext+u;
+    if(!isAbsolutUrl(url) && !startsWith(url, appContext)){
+       url=appContext+url;
     }
-    proxied.apply(this, [method, u, user, password]);
+    proxied.apply(this, [method, url, user, password]);
   };
 })();
