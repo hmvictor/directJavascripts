@@ -1,12 +1,12 @@
 (function(){
-  function getAppContext(){
-      //missing
+  function getAppContext() {
+      return document.getUserData("appContext");
   }
   function isAbsolutUrl(url) {
-      //missing
+      return startsWith(url, "http");
   }
-  function startsWith(string, prefix){
-      //missing
+  function startsWith(string, prefix) {
+      return string.indexOf(prefix) === 0;
   }
   var proxied=XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open=function(method, url, user, password) {
