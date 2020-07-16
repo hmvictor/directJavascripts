@@ -3,7 +3,7 @@
     window.fetch = function(url, init) {
         document.dispatchEvent(
             new CustomEvent(
-                "fetchStarted", 
+                "fetchStart", 
                 {
                     detail: {
                         url: url,
@@ -14,7 +14,7 @@
         );
         const promise=proxiedFetch.apply(this, arguments);
         promise.then((response) => {
-            document.dispatchEvent(new CustomEvent("fetchCompleted", {
+            document.dispatchEvent(new CustomEvent("fetchComplete", {
                 detail: {
                     url: url,
                     init: init,
@@ -22,7 +22,7 @@
                 }
             }));
         }, (error) => {
-            document.dispatchEvent(new CustomEvent("fetchFailed", {
+            document.dispatchEvent(new CustomEvent("fetchFail", {
                 detail: {
                     url: url,
                     init: init,

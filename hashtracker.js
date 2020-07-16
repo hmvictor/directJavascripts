@@ -18,7 +18,7 @@ class HashLocationTracker {
                 }
             }
         };
-        this.registerByPattern[pattern]=registered;
+        this.registerByPattern["^"+pattern+"$"]=registered;
         return registered;
     }
 

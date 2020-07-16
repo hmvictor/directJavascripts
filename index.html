@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Functionality without compromises</title>
+        <meta charset="windows-1252"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
+        <script type="module" src="tasks.js"></script>
+        <script type="module" src="hashtracker.js"></script>
+        <script type="module" src="globalRequestEvents.js"></script>
+        <script type="module" src="httpHiddenMethod.js"></script>
+        <script type="module" src="urlRewriter.js"></script>
+    </head>
+    <body>
+        <h1 id="title">Examples</h1>
+        <form class="container">
+            <div class="form-group">
+                <label for="appLog">App Log</label>
+                <textarea id="appLog" rows="10" readonly="readonly"></textarea>
+            </div>
+            <div class="form-group">
+                <h2>Fetch Data Example</h2>
+                <button type="button" onclick="fetchUrl('GET', 'data.json')" class="btn btn-default">
+                    Fetch Numbers
+                </button>
+                <button type="button" onclick="fetchUrl('GET', 'example.json')" class="btn btn-default">
+                    Fetch non existing data
+                </button>
+            </div>
+            <div class="form-group">
+                <h2>Hidden Method Example</h2>
+                <button type="button" onclick="fetchUrl('DELETE', 'data.json')" class="btn btn-default">
+                    Fetch with PUT method.
+                </button>
+            </div>
+            <div class="form-group">
+                <h2>Hash Location Example</h2>
+                <a href="#/init">Init</a>
+                <a href="#/hello/world">Hello</a>
+            </div>
+        </form>
+        <script type="module">
+            import tracker from "./directJs/hashtracker.js";
+            
+            import urlRewriter from "./directJs/urlRewriter.js";
+            
+            document.addEventListener("fetchStarted", () => {
+                document.getElementById("appLog").value+="\nFetch start";
+            });
+            document.addEventListener("fetchComplete", () => {
+                document.getElementById("appLog").value+="\nFetch complete";
+            });
+            document.addEventListener("fetchFailed", () => {
+                document.getElementById("appLog").value+="\nFetch fail";
+            });
+            hashTracker.given("#/init").then(()=> {
+                document.getElementById("title").innerHTML="Init";
+            });
+            hashTracker.given("#/hello/(.+)").then((matchResult)=> {
+                document.getElementById("title").innerHTML="Hello, "+matchResult[1]+"!";
+            });
+            urlRewriter.baseUrl="";
+            hashTracker.processCurrent();
+            
+            function fetchUrl(method, url) {
+                window.fetch(url, {
+                    method: method
+                }).then(response => {
+                    if(response.status === 200) {
+                        response.json().then(data => {
+                            document.getElementById("appLog").value+="\n"+data;
+                        });
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

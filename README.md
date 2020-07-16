@@ -1,9 +1,18 @@
-# directJavascripts
-Some simple and direct javascripts with no dependencies to a framework.
+These are scripts for functionality that is implemented directly in javascript and doesn´t have dependencies in any framework.
 
-Includes:
+Sometimes you need functionality but don't want to compromise with a big framework. You want to have the chance of changing frameworks without reworking all your functionality.
 
-* Http Hidden Method functionality.
-* Insert application context in request.
+gobalRequestEvents.js: 
+Adds a document event when fetch is started, completed or failed.
 
-**Status:** These scripts already work but some functionality could be missing.
+httpHiddenMethod.js: 
+Converts the method of fetch to a param if for some reason your server doesn't support it because of security policies not controlled by you.
+
+hashtracker.js:
+Allows to register functions when the hash location changes.
+
+tasks.js
+A small class to abstract an execution. Helpful to reflect user interface state and task execution status.
+
+urlRewriter.js
+Add a context base url to applications.
