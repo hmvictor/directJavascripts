@@ -1,21 +1,35 @@
 (function(){
-  function createRequestEvent(eventName, request) {
-    var event=new Event("Event");
-    event.init(eventName, true, true);
-    return event;
-  }
-  function fireEvent(event) {
-    document.dispatchEvent(event);
-  }
-  var proxied=XMLHttpRequest.prototype.send;
-  XMLHttpRequest.prototype.send=function() {
-    var request=this;
-    function finishedEventHandler() {
-      fireEvent(createRequestEvent("requestFinished", request));
-    }
-    request.addEventListener("load", finishedEventHandler);
-    request.addEventListener("error", finishedEventHandler);
-    fireEvent(createRequestEvent(request, "requestStarted"));
-    return proxied.apply(request, arguments);
-  };
+    const proxiedFetch = window.fetch;
+    window.fetch = function(url, init) {
+        document.dispatchEvent(
+            new CustomEvent(
+                "fetchStarted", 
+                {
+                    detail: {
+                        url: url,
+                        init: init
+                    }
+                }
+            )
+        );
+        const promise=proxiedFetch.apply(this, arguments);
+        promise.then((response) => {
+            document.dispatchEvent(new CustomEvent("fetchCompleted", {
+                detail: {
+                    url: url,
+                    init: init,
+                    response: response
+                }
+            }));
+        }, (error) => {
+            document.dispatchEvent(new CustomEvent("fetchFailed", {
+                detail: {
+                    url: url,
+                    init: init,
+                    error: error
+                }
+            }));
+        });
+        return promise;
+    };
 })();

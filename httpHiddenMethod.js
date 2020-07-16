@@ -1,16 +1,21 @@
-(function(){
-  var proxied=XMLHttpRequest.prototype.open;
-  XMLHttpRequest.prototype.open=function(method, url, user, password) {
-    var m=method;
-    var u=url;
-    if(m === "DELETE" || m === "PUT") {
-        m="POST";
-        if(u.indexOf("?") === -1){
-           u+="?_method="+method;
+const proxiedFetch = window.fetch ;
+window.fetch = function(requestedUrl, init) {
+    let methodParam="_method";
+    let requestedHttpMethod=init && init.method ? init.method : "GET";
+    let effective={
+        httpMethod: requestedHttpMethod,
+        url: requestedUrl
+    };
+    if(requestedHttpMethod === "DELETE" || requestedHttpMethod === "PUT") {
+        let queryParamSeparator;
+        if(requestedUrl.indexOf("?") === -1){
+            queryParamSeparator="?";
         }else{
-           u+="&_method="+method;          
+            queryParamSeparator="&";
         }
+        effective.url=requestedUrl+queryParamSeparator+methodParam+"="+requestedHttpMethod;
+        effective.httpMethod="POST";
     }
-    proxied.apply(this, [m, u, user, password]);
-  };
-})();
+    init.method=effective.httpMethod;
+    return proxiedFetch.apply(this, [effective.url, init]);
+};
