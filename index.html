@@ -13,24 +13,18 @@
     </head>
     <body>
         <div class="container">
-            <h1 id="title">Functionality without compromises</h1>
+            <h1 id="title" class="text-center">Functionality without compromises</h1>
+            <br/>
+            <p class="lead">Helpful utilities implemented with pure javascript.</p>
+            <br/>
             <form>
                 <div class="form-group">
-                    <h2>Document scope fetch listeners</h2>
-                    <p>Add fetch events attached to the document object.</p>
+                    <h2>globalFetchEvents.js - Document Scope Fetch Events</h2>
+                    <br/>
+                    <p>Add events listeners to the document object and execute code when a fetch happens.</p>
                     <p>
                         <code>document.addEventListener("fetchStart", fnListener);</code>
                     </p>
-                    
-                    <button type="button" onclick="fetchUrl('GET', 'data.json')" class="btn btn-primary">
-                        Fetch numbers
-                    </button>
-                    
-                    <button type="button" onclick="fetchUrl('GET', 'example.json')" class="btn btn-primary">
-                        Fetch non existing data
-                    </button>
-                    <br/>
-                    <br/>
                     <table class="table table-sm">
                         <caption>Available events</caption>
                         <thead>
@@ -54,32 +48,74 @@
                             </tr>
                         </tbody>
                     </table>
+                    <p>Example:</p>
+                    <button type="button" onclick="fetchUrl('GET', 'data.json')" class="btn btn-primary">
+                        Fetch numbers
+                    </button>
+                    <button type="button" onclick="fetchUrl('GET', 'example.json')" class="btn btn-primary">
+                        Fetch non existing data
+                    </button>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
                 </div>
                 <div class="form-group">
-                    <h2>Hidden Method Example</h2>
-                    <p>Used a hidden method param when an HTTP method is now allowed in a host or application (maybe because of security policies not controlled by you).</p>
-                    <p>The HTPP method is converted to POST and a method param is used instead.</p>
+                    <h2>httpHiddenMethod.js - Hidden Method Param</h2>
+                    <br/>
+                    <p>Use a hidden method param in your application when an HTTP PUT or DELETE method is not allowed in a host or server (maybe because of security policies not controlled by you).</p>
+                    <p>The HTPP method is converted to POST and a param is used instead.</p>
+                    <p>Example:</p>
                     <button type="button" onclick="fetchUrl('DELETE', 'data.json')" class="btn btn-primary">
                         Fetch with PUT method.
                     </button>
                 </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 <div class="form-group">
-                    <h2>Hash Location Example</h2>
+                    <h2>hashtracker.js - Module for Hash Location Functions</h2>
+                    <br/>
                     <p>
                         Call functions when the hash location of the windows is changed.
                     </p>
                     <p>
                         <code>hashTracker.given("#/init").then(fn);</code>
                     </p>
-                    <a href="#/init">
+                    <p>Example:</p>
+                    <a href="#/init" class="btn btn-link">
                         Init
                     </a>
                     <br/>
-                    <a href="#/hello/world">
+                    <a href="#/hello/world" class="btn btn-link">
                         Hello
                     </a>
+                    <br/>
+                    <br/>
+                    <br/>
                 </div>
                 <div class="form-group">
+                    <h2>urlRewriter.js - URL fetch rewriter.</h2>
+                    <br/>
+                    <p>
+                        Add a base prefix domain/context to relative urls invoked by fetch.
+                    </p>
+                    <br/>
+                    <br/>
+                    <br/>
+                </div>
+                <div class="form-group">
+                    <h2>tasks.js - Task Class</h2>
+                    <br/>
+                    <p>
+                        A class for execution.
+                    </p>
+                    <br/>
+                    <br/>
+                    <br/>
+                </div>
+                 <div class="form-group">
                     <label for="appLog">App Log</label>
                     <textarea id="appLog" rows="10" readonly="readonly" class="form-control"></textarea>
                 </div>
