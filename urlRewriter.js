@@ -6,22 +6,21 @@ function startsWith(string, prefix) {
     return string.indexOf(prefix) === 0;
 }
 
-let baseUrl="";
+const urlRewriter={
+    appContext: "",
+    rewrite: function(requestedUrl) {
+        let effectiveUrl = requestedUrl;
+        if (!isAbsolutUrl(effectiveUrl) && !startsWith(effectiveUrl, this.appContext)) {
+            effectiveUrl = this.appContext + "/" + effectiveUrl;
+        }
+        return effectiveUrl;
+    }
+};
 
 var proxiedFetch = window.fetch ;
 window.fetch = function(requestedUrl, init) {
-    let effectiveUrl = requestedUrl;
-    let appContext = baseUrl;
-    if (!isAbsolutUrl(effectiveUrl) && !startsWith(effectiveUrl, appContext)) {
-        effectiveUrl = appContext + effectiveUrl;
-    }
+    let effectiveUrl = urlRewriter.rewrite(requestedUrl);
     return proxiedFetch.apply(this, [effectiveUrl, init]);
-};
-
-const urlRewriter={
-    appUrl: function(value){
-        baseUrl=value;
-    }
 };
 
 export {urlRewriter};

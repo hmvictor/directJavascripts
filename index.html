@@ -7,9 +7,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
         <script src="fetchEvents.js"></script>
         <script type="module" src="httpHiddenMethod.js"></script>
-        <script type="module" src="tasks.js"></script>
-        <script type="module" src="hashLocationTracker.js"></script>
-        <script type="module" src="urlRewriter.js"></script>
+        <!--<script type="module" src="tasks.js"></script>-->
     </head>
     <body>
         <div class="container">
@@ -19,7 +17,7 @@
             <br/>
             <form>
                 <div class="form-group">
-                    <h2>globalFetchEvents.js - Document Scope Fetch Events</h2>
+                    <h2>fetchEvents.js - Document Scope Fetch Events</h2>
                     <br/>
                     <p>Add events listeners to the document object and execute code when a fetch happens.</p>
                     <p>
@@ -107,7 +105,7 @@
                         Add a base prefix domain/context to relative urls invoked by fetch.
                     </p>
                     <br/>
-                    <button type="button" onclick="fetchUrl('GET', 'data.json', 'logUrlRewriter')" class="btn btn-primary">
+                    <button type="button" onclick="fetchRewrite('GET', 'data.json', 'logUrlRewriter')" class="btn btn-primary">
                         Fetch
                     </button>
                     <br/>
@@ -129,16 +127,9 @@
             </form>
         </div>
         <script type="module">
-            import {hashLocationTracker} from "./hashLocationtracker.js";
+            import {hashLocationTracker} from "./hashLocationTracker.js";
             
             import {urlRewriter} from "./urlRewriter.js";
-            
-            function log(text) {
-                if(document.getElementById("appLog").value.length !== 0) {
-                    document.getElementById("appLog").value+="\n";
-                }
-                document.getElementById("appLog").value+=text;
-            }
             
             document.addEventListener("fetchStart", event => {
                 if(window.logId) {
@@ -176,9 +167,13 @@
                 });
             }
             
-            window.clearLog=function(){
-                document.getElementById("appLog").value="";
+            window.fetchRewrite = function(method, url, logId) {
+                urlRewriter.appContext=window.location.protocol+"//"+window.location.host+(window.location.host.indexOf("localhost") === -1? "": "/dnx-runner/directJs");
+                let effectiveUrl = urlRewriter.rewrite(url);
+                window.fetchUrl(method, url, logId);
+                urlRewriter.appContext="";
             };
+            
         </script>
     </body>
 </html>
