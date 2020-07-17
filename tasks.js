@@ -1,4 +1,4 @@
-export {Task as default};
+export {Task};
 
 class Task {
     

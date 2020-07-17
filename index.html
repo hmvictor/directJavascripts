@@ -5,10 +5,10 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
-        <script src="globalRequestEvents.js"></script>
+        <script src="fetchEvents.js"></script>
         <script type="module" src="httpHiddenMethod.js"></script>
         <script type="module" src="tasks.js"></script>
-        <script type="module" src="hashtracker.js"></script>
+        <script type="module" src="hashLocationTracker.js"></script>
         <script type="module" src="urlRewriter.js"></script>
     </head>
     <body>
@@ -129,9 +129,9 @@
             </form>
         </div>
         <script type="module">
-            import hashTracker from "./hashtracker.js";
+            import {hashLocationTracker} from "./hashLocationtracker.js";
             
-            import urlRewriter from "./urlRewriter.js";
+            import {urlRewriter} from "./urlRewriter.js";
             
             function log(text) {
                 if(document.getElementById("appLog").value.length !== 0) {
@@ -157,17 +157,17 @@
                     document.getElementById(window.logId).innerHTML+="<br/>Fetch fail. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"].";
                 }
             });
-            hashTracker.given("#/init").then(()=> {
+            hashLocationTracker.given("#/init").then(()=> {
                 document.getElementById("exampleLabel").innerHTML="Init";
             });
-            hashTracker.given("#/hello/(.+)").then(matchResult => {
+            hashLocationTracker.given("#/hello/(.+)").then(matchResult => {
                 document.getElementById("exampleLabel").innerHTML="Hello, "+matchResult[1]+"!";
             });
-            hashTracker.given("").then(matchResult => {
+            hashLocationTracker.given("").then(matchResult => {
                 document.getElementById("exampleLabel").innerHTML="Example:";
             });
             urlRewriter.baseUrl="";
-            hashTracker.processCurrent();
+            hashLocationTracker.processCurrent();
             
             window.fetchUrl=function(method, url, logId) {
                 window.logId=logId;

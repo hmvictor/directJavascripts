@@ -18,10 +18,10 @@ window.fetch = function(requestedUrl, init) {
     return proxiedFetch.apply(this, [effectiveUrl, init]);
 };
 
-const urlWriter={
+const urlRewriter={
     appUrl: function(value){
         baseUrl=value;
     }
 };
 
-export default urlWriter;
+export {urlRewriter};
