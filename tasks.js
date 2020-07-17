@@ -2,50 +2,54 @@ export {Task};
 
 class Task {
     
-    constructor(fn) {
-        this.fn = fn;
-        this.executing=false;
-        this.result={
-            value: null,
-            error: null
+    constructor(description, promiseFn) {
+        this.description=description;
+        this.promiseFn = promiseFn;
+        this.listeners={
+            "start": [],
+            "complete": [],
+            "fail": []
         };
+        this.status=Task.Status.NOT_RUNNING;
     }
     
-    isExecuting() {
-        return this.executing;
+    addEventListener(eventName, fn){
+        this.listeners[eventName].push(fn);
     }
     
-    reset() {
-        this.executing=false;
-        this.result={
-            value: null,
-            error: null
-        };
+    removeEventListener(eventName, fn){
+        this.listeners[eventName].remove(fn);
+    }
+    
+    dispatchEvent(event) {
+        for(let listener of this.listeners[event.type]) {
+            listener(event);
+        }
     }
     
     start(...args) {
-        this.executing=true;
-        this.result={
-            value: null,
-            error: null
-        };
-        this.fn.apply(null, args).then(r => {
-            this.executing=false;
-            this.result={
-                value: r,
-                error: null
-            };
-        }, jqXHR => {
-            this.executing=false;
-            try{
-                this.result={
-                    value: null, 
-                    errorMessages: JSON.parse(jqXHR.responseText).messages
-                };
-            }catch (error){
-                
-            }
+        this.status=Task.Status.RUNNING;
+        this.dispatchEvent(new CustomEvent("start"));
+        return new Promise((resolve, reject)=> {
+            this.promiseFn.apply(null, args)
+                .then(result => {
+                    this.status=Task.Status.NOT_RUNNING;
+                    this.dispatchEvent(new CustomEvent("complete"));
+                    resolve(result);
+                }, error => {
+                    this.status=Task.Status.NOT_RUNNING;
+                    this.dispatchEvent(new CustomEvent("fail"));
+                    reject(error);
+                });
         });
     }
   
 }
+
+let RUNNING=Symbol("RUNNING");
+let NOT_RUNNING=Symbol("NOT RUNNING");
+
+Task.Status={
+    RUNNING: RUNNING,
+    NOT_RUNNING: NOT_RUNNING
+};

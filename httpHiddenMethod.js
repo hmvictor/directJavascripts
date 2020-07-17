@@ -16,6 +16,11 @@ window.fetch = function(requestedUrl, init) {
         effective.url=requestedUrl+queryParamSeparator+methodParam+"="+requestedHttpMethod;
         effective.httpMethod="POST";
     }
-    init.method=effective.httpMethod;
+    if(!init && effective.httpMethod !== "GET") {
+        init={};
+    }
+    if(init) {
+        init.method=effective.httpMethod;
+    }
     return proxiedFetch.apply(this, [effective.url, init]);
 };

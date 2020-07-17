@@ -64,7 +64,7 @@
                     <h2>httpHiddenMethod.js - Hidden Method Param</h2>
                     <br/>
                     <p>Use a hidden method param in your application when an HTTP PUT or DELETE method is not allowed in a host or server (maybe because of security policies not controlled by you).</p>
-                    <p>The HTPP method is converted to POST and a param is used instead.</p>
+                    <p>The HTTP method is converted to POST and a param is used instead.</p>
                     <p>Example:</p>
                     <button type="button" onclick="fetchUrl('DELETE', 'data.json', 'logHiddenMethod')" class="btn btn-primary">
                         Fetch with PUT method.
@@ -78,7 +78,7 @@
                 <br/>
                 <br/>
                 <div class="form-group">
-                    <h2>hashtracker.js - Module for Hash Location Functions</h2>
+                    <h2>hashLocationTracker.js - Module for Hash Location Functions</h2>
                     <br/>
                     <p>
                         Call functions when the hash location of the windows is changed.
@@ -99,7 +99,7 @@
                     <br/>
                 </div>
                 <div class="form-group">
-                    <h2>urlRewriter.js - URL fetch rewriter.</h2>
+                    <h2>fetchUrlRewriter.js - URL fetch rewriter.</h2>
                     <br/>
                     <p>
                         Add a base prefix domain/context to relative urls invoked by fetch.
@@ -118,9 +118,22 @@
                     <h2>tasks.js - Task Class</h2>
                     <br/>
                     <p>
-                        A class for execution.
+                        A class to encapsulate a long running function. You can give some feedback or block some UI components while the task is running.
                     </p>
+                    <p>
+                        <strong>Tip:</strong> You can bind the status of the task with an element attribute in your favorite framework.
+                    </p>
+                    <p>
+                        <code>
+                            &lt;button :disabled="task.status === Task.Status.RUNNING" type="button"&gt;&lt;/button&gt;
+                        </code>
+                    </p>
+                    <button id="taskButton" :disabled="task.status === Task.Status.RUNNING" type="button" onclick="executeTask()" class="btn btn-primary">
+                        Task Description
+                    </button>
                     <br/>
+                    <br/>
+                    <p id="logTasks" class="font-italic"></p>
                     <br/>
                     <br/>
                 </div>
@@ -129,7 +142,9 @@
         <script type="module">
             import {hashLocationTracker} from "./hashLocationTracker.js";
             
-            import {urlRewriter} from "./urlRewriter.js";
+            import {urlRewriter} from "./fetchUrlRewriter.js";
+            
+            import {Task} from "./tasks.js";
             
             document.addEventListener("fetchStart", event => {
                 if(window.logId) {
@@ -162,7 +177,7 @@
             
             window.fetchUrl=function(method, url, logId) {
                 window.logId=logId;
-                window.fetch(url, {
+                return window.fetch(url, {
                     method: method
                 });
             }
@@ -170,9 +185,78 @@
             window.fetchRewrite = function(method, url, logId) {
                 urlRewriter.appContext=window.location.protocol+"//"+window.location.host+(window.location.host.indexOf("localhost") === -1? "/directJavascripts/": "/dnx-runner/directJs");
                 let effectiveUrl = urlRewriter.rewrite(url);
-                window.fetchUrl(method, url, logId);
+                let promise=window.fetchUrl(method, url, logId);
                 urlRewriter.appContext="";
+                return promise;
             };
+            
+            const task=new Task("Get Users", () => {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        fetchRewrite("GET", "/users.json")
+                            .then(response =>{
+                                response.json().then(data => {
+                                    resolve(data);
+                                });
+                            }, error =>{
+                                reject(error);
+                            });
+                        
+                    }, 2000);
+                });
+            });
+            
+            document.getElementById("taskButton").innerHTML=task.description;
+            task.addEventListener("start", (event) => {
+                document.getElementById("logTasks").innerHTML="";
+                document.getElementById("taskButton").innerHTML="Getting users";
+                document.getElementById("taskButton").disabled=true;
+                console.log(task.status.description);
+            });
+            task.addEventListener("complete", () => {
+                document.getElementById("taskButton").disabled=false;
+                document.getElementById("taskButton").innerHTML=task.description;
+            });
+            task.addEventListener("fail", () => {
+                document.getElementById("taskButton").disabled=false;
+                document.getElementById("taskButton").innerHTML=task.description;
+            });
+            
+            window.executeTask=function() {
+                task.start().then(users => {
+                    document.getElementById("logTasks").innerHTML="";
+                    let counter=0;
+                    for(let user of users) {
+                        if(counter > 0) {
+                            document.getElementById("logTasks").innerHTML+=", ";
+                        }
+                        document.getElementById("logTasks").innerHTML+=user.name;
+                        counter++;
+                    }
+                });
+            };
+            
+            
+               
+                function jsonPromise(promiseFetch){
+                    return new Promise((resolve, reject) => {
+                        promiseFetch
+                            .then(response => {
+                                if(response.status >= 200 && response.status < 300) {
+                                    response.json().then(data => {
+                                        resolve(data);
+                                    });
+                                } else {
+                                    response.json().then(data => {
+                                        //process error data
+                                        reject(data);
+                                    });
+                                }
+                            }, error => {
+                                reject(error);
+                            });
+                    });
+                }
             
         </script>
     </body>
