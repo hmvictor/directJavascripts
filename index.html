@@ -137,7 +137,7 @@
                 }
             });
             document.addEventListener("fetchComplete", event => {
-                if(window.logId) {
+                if(window.logId && event.detail.response.status === 200) {
                     event.detail.response.json().then(content => {
                         document.getElementById(window.logId).innerHTML+="<br/>Fetch complete. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Response: "+content+".";
                     });
@@ -168,7 +168,7 @@
             }
             
             window.fetchRewrite = function(method, url, logId) {
-                urlRewriter.appContext=window.location.protocol+"//"+window.location.host+(window.location.host.indexOf("localhost") === -1? "": "/dnx-runner/directJs");
+                urlRewriter.appContext=window.location.protocol+"//"+window.location.host+(window.location.host.indexOf("localhost") === -1? "/directJavascripts/": "/dnx-runner/directJs");
                 let effectiveUrl = urlRewriter.rewrite(url);
                 window.fetchUrl(method, url, logId);
                 urlRewriter.appContext="";
