@@ -7,7 +7,6 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
         <script src="fetchEvents.js"></script>
         <script type="module" src="httpHiddenMethod.js"></script>
-        <!--<script type="module" src="tasks.js"></script>-->
     </head>
     <body>
         <div class="container">
@@ -19,10 +18,7 @@
                 <div class="form-group">
                     <h2>fetchEvents.js - Document Scope Fetch Events</h2>
                     <br/>
-                    <p>Add events listeners to the document object and execute code when a fetch happens.</p>
-                    <p>
-                        <code>document.addEventListener("fetchStart", fnListener);</code>
-                    </p>
+                    <p>Add event listeners to the document object and execute code when a fetch happens.</p>
                     <table class="table table-sm">
                         <caption>Available events</caption>
                         <thead>
@@ -57,6 +53,34 @@
                     <br/>
                     <p id="logFetch" class="font-italic"></p>
                     <br/>
+                    <h4>
+                      Use it:  
+                    </h4>
+                    <p class="text-light bg-dark p-3">
+                        <button type="button" class="btn btn-info btn-sm float-right copyCode">
+                            Copy
+                        </button>
+                        <code>
+                            &lt;-- Include de javascript in the page --&gt;
+                            <br/>
+                            &lt;script src="fetchEvents.js"&gt;&lt;/script&gt;
+                        </code>
+                    </p>
+                    <p class="text-light bg-dark p-3">
+                        <button type="button" class="btn btn-info btn-sm float-right copyCode">
+                            Copy
+                        </button>
+                        <code>
+                            //Register listeners in javascript
+                            <br/>
+                            document.addEventListener("fetchStart", event => {});
+                            <br/>
+                            document.addEventListener("fetchComplete", event => {});
+                            <br/>
+                            document.addEventListener("fetchFail", event => {});
+                        </code>
+                    </p>
+                    <br/>
                     <br/>
                     <br/>
                 </div>
@@ -72,6 +96,21 @@
                     <br/>
                     <br/>
                     <p id="logHiddenMethod" class="font-italic"></p>
+                    <br/>
+                    <h4>
+                        Use it:
+                    </h4>
+                    <p class="text-light bg-dark p-3">
+                        <button type="button" class="btn btn-info btn-sm float-right copyCode">
+                            Copy
+                        </button>
+                        <code>
+                            &lt;-- Include the javascript in the page --&gt;
+                            <br/>
+                            &lt;script src="httpHiddenMethod.js"&gt;&lt;/script&gt;
+                        </code>
+                    </p>
+                    <br/>
                 </div>
                 <br/>
                 <br/>
@@ -96,6 +135,32 @@
                     </a>
                     <br/>
                     <br/>
+                    <h4>
+                        Use it:
+                    </h4>
+                    <p class="text-light bg-dark p-3">
+                        <button type="button" class="btn btn-info btn-sm float-right copyCode">
+                            Copy
+                        </button>
+                        <code id="code">
+                            //Import the module
+                            <br/>
+                            import {hashLocationTracker} from "./hashLocationTracker.js";
+                            <br/>
+                            <br/>
+                            //Register function to execute for a regexp pattern, the function receives the match result to extract groups for parameterized locations
+                            <br/>
+                            //Pattern is matched againts the whole hash location.
+                            <br/>
+                            hashLocationTracker.given("#/index").then(matchResult => {});
+                            <br/>
+                            <br/>
+                            //Execute when the page is loaded or after some kind of page initialization.
+                            <br/>
+                            hashLocationTracker.processCurrent();
+                        </code>
+                    </p>
+                    <br/>
                     <br/>
                 </div>
                 <div class="form-group">
@@ -112,13 +177,32 @@
                     <br/>
                     <p id="logUrlRewriter" class="font-italic"></p>
                     <br/>
+                    <h4>
+                        Use it:
+                    </h4>
+                    <p class="text-light bg-dark p-3">
+                        <button type="button" class="btn btn-info btn-sm float-right copyCode">
+                            Copy
+                        </button>
+                        <code id="code">
+                            //Import the module
+                            <br/>
+                            import {urlRewriter} from "./fetchUrlRewriter.js";
+                            <br/>
+                            <br/>
+                            //Set the app context url base.
+                            <br/>
+                            urlRewriter.appContext="https://my.domain.com/hello-application";
+                        </code>
+                    </p>
                     <br/>
                 </div>
                 <div class="form-group">
                     <h2>tasks.js - Task Class</h2>
                     <br/>
                     <p>
-                        A class to encapsulate a long running function. You can give some feedback or block some UI components while the task is running.
+                        A class to encapsulate a long running function. You can give some feedback or block some UI components while the task is running. 
+                        It has a status property and supports event listeners.
                     </p>
                     <p>
                         <strong>Tip:</strong> You can bind the status of the task with an element attribute in your favorite framework.
@@ -135,6 +219,24 @@
                     <br/>
                     <p id="logTasks" class="font-italic"></p>
                     <br/>
+                    <h4>
+                        Use it:
+                    </h4>
+                    <p class="text-light bg-dark p-3">
+                        <button type="button" class="btn btn-info btn-sm float-right copyCode">
+                            Copy
+                        </button>
+                        <code id="code">
+                            //Import the module
+                            <br/>
+                            import {Task} from "./tasks.js";
+                            <br/>
+                            <br/>
+                            //Create a task with a description and a function that returns a promise (fetch, for example).
+                            <br/>
+                            new Task("Get Users", () => {});
+                        </code>
+                    </p>
                     <br/>
                 </div>
             </form>
@@ -236,6 +338,30 @@
                 });
             };
             
+            function selectText(node) {
+//                node = document.getElementById(node);
+
+                if (document.body.createTextRange) {
+                    const range = document.body.createTextRange();
+                    range.moveToElementText(node);
+                    range.select();
+                } else if (window.getSelection) {
+                    const selection = window.getSelection();
+                    const range = document.createRange();
+                    range.selectNodeContents(node);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                } else {
+                    console.warn("Could not select text in node: Unsupported browser.");
+                }
+            }
+            
+            document.querySelectorAll("button.copyCode").forEach(element =>{
+                element.addEventListener("click", () => {
+                    selectText(element.parentNode.querySelector("code"));
+                    document.execCommand("copy");
+                });
+            });
             
                
                 function jsonPromise(promiseFetch){
