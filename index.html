@@ -142,7 +142,7 @@
                         <button type="button" class="btn btn-info btn-sm float-right copyCode">
                             Copy
                         </button>
-                        <code id="code">
+                        <code>
                             //Import the module
                             <br/>
                             import {hashLocationTracker} from "./hashLocationTracker.js";
@@ -184,7 +184,7 @@
                         <button type="button" class="btn btn-info btn-sm float-right copyCode">
                             Copy
                         </button>
-                        <code id="code">
+                        <code>
                             //Import the module
                             <br/>
                             import {urlRewriter} from "./fetchUrlRewriter.js";
@@ -213,7 +213,10 @@
                         </code>
                     </p>
                     <button id="taskButton" :disabled="task.status === Task.Status.RUNNING" type="button" onclick="executeTask()" class="btn btn-primary">
-                        Task Description
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="description">
+                            Task Description
+                        </span>
                     </button>
                     <br/>
                     <br/>
@@ -226,7 +229,7 @@
                         <button type="button" class="btn btn-info btn-sm float-right copyCode">
                             Copy
                         </button>
-                        <code id="code">
+                        <code>
                             // Import the module
                             <br/>
                             import {Task} from "./tasks.js";
@@ -313,20 +316,24 @@
                 });
             });
             
-            document.getElementById("taskButton").innerHTML=task.description;
+            document.getElementById("taskButton").querySelector(".description").innerHTML=task.description;
+            document.getElementById("taskButton").querySelector("[role=status]").style.display='none';
             task.addEventListener("start", (event) => {
                 document.getElementById("logTasks").innerHTML="";
-                document.getElementById("taskButton").innerHTML="Getting users";
+                document.getElementById("taskButton").querySelector(".description").innerHTML="Getting users";
                 document.getElementById("taskButton").disabled=true;
+                document.getElementById("taskButton").querySelector("[role=status]").style.display='';
                 console.log(task.status.description);
             });
             task.addEventListener("complete", () => {
                 document.getElementById("taskButton").disabled=false;
-                document.getElementById("taskButton").innerHTML=task.description;
+                document.getElementById("taskButton").querySelector(".description").innerHTML=task.description;
+                document.getElementById("taskButton").querySelector("[role=status]").style.display='none';
             });
             task.addEventListener("fail", () => {
                 document.getElementById("taskButton").disabled=false;
-                document.getElementById("taskButton").innerHTML=task.description;
+                document.getElementById("taskButton").querySelector(".description").innerHTML=task.description;
+                document.getElementById("taskButton").querySelector("[role=status]").style.display='none';
             });
             
             window.executeTask=function() {
