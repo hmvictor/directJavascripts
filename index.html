@@ -227,14 +227,19 @@
                             Copy
                         </button>
                         <code id="code">
-                            //Import the module
+                            // Import the module
                             <br/>
                             import {Task} from "./tasks.js";
                             <br/>
                             <br/>
-                            //Create a task with a description and a function that returns a promise (fetch, for example).
+                            // Create a task with a description and a function that returns a promise (fetch, for example).
                             <br/>
-                            new Task("Get Users", () => {});
+                            const getUserTask=new Task("Get Users", id => fetch("user"+Id+".json")); // Receives a parameter.
+                            <br/>
+                            <br/>
+                            // Starts the task, this could be when a button is clicked too.
+                            <br/>
+                            getUsersTask.start(1); // Parameters are passed to the function in the task.
                         </code>
                     </p>
                     <br/>
