@@ -221,6 +221,8 @@
                         <code>
                             /*
                             <br/>
+                            If you want to configure the prefix in javascript. Import it in an inline script module.
+                            <br/>
                             Import the module. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules</a>
                             <br/>
                             Your code has to be a module itself in order to use modules. For inline scripts use: &lt;script type="module"&gt; <em>javascript code</em> &lt;/script&gt;
@@ -230,9 +232,29 @@
                             import {urlRewriter} from "./fetchUrlRewriter.js";
                             <br/>
                             <br/>
-                            //Set the app context url base.
+                            //Javascript
                             <br/>
-                            urlRewriter.appContext="https://my.domain.com/hello-application";
+                            urlRewriter.prefix="https://my.domain.com/hello-application";
+                            <br/>
+                        </code>
+                    </p>
+                    
+                    <p class="text-light bg-dark p-3">
+                        <button type="button" class="btn btn-info btn-sm float-right copyCode">
+                            Copy
+                        </button>
+                        <code>
+                            &lt;-- If you want to configure in HTML. --&gt;
+                            <br/>
+                            <br/>
+                            &lt;-- Define the prefix with a meta tag named fetchUrlPrefix --&gt;
+                            <br/>
+                            &lt;meta name="fetchUrlPrefix" content="https://my.domain.com/hello-application"/&gt;
+                            <br/>
+                            <br/>
+                            &lt;-- Import the module with a script element --&gt;
+                            <br/>
+                            &lt;script src="fetchEvents.js"&gt;&lt;/script&gt;
                         </code>
                     </p>
                     <div>
