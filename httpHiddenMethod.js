@@ -1,6 +1,12 @@
 const proxiedFetch = window.fetch ;
 window.fetch = function(requestedUrl, init) {
-    let methodParam="_method";
+    let methodParam;
+    const metaElement=document.querySelector('meta[name="hiddenMethodParam"]');
+    if(metaElement) {
+        methodParam=metaElement.content;
+    }else{
+        methodParam="_method";
+    }
     let requestedHttpMethod=init && init.method ? init.method : "GET";
     let effective={
         httpMethod: requestedHttpMethod,

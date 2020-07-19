@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
         <script src="https://kit.fontawesome.com/c23a7997f1.js" crossorigin="anonymous"></script>
         <script src="fetchEvents.js"></script>
-        <script type="module" src="httpHiddenMethod.js"></script>
+        <script src="httpHiddenMethod.js"></script>
     </head>
     <body>
         <div class="container">
@@ -115,6 +115,11 @@
                             &lt;-- Include the javascript in the page --&gt;
                             <br/>
                             &lt;script src="httpHiddenMethod.js"&gt;&lt;/script&gt;
+                            <br/>
+                            <br/>
+                            &lt;-- Default param name is _method but you can change it with a meta tag with named hiddenMethodParam --&gt;
+                            <br/>
+                            &lt;meta name="hiddenMethodParam" content="_httpMethod"/&gt;
                         </code>
                     </p>
                     <div>
@@ -331,7 +336,7 @@
             hashLocationTracker.given("").then(matchResult => {
                 document.getElementById("exampleLabel").innerHTML="Example:";
             });
-            urlRewriter.baseUrl="";
+            
             hashLocationTracker.processCurrent();
             
             window.fetchUrl=function(method, url, logId) {
@@ -342,10 +347,10 @@
             }
             
             window.fetchRewrite = function(method, url, logId) {
-                urlRewriter.appContext=window.location.protocol+"//"+window.location.host+(window.location.host.indexOf("localhost") === -1? "/directJavascripts/": "/dnx-runner/directJs");
+                urlRewriter.prefix=window.location.protocol+"//"+window.location.host+(window.location.host.indexOf("localhost") === -1? "/directJavascripts/": "/dnx-runner/directJs");
                 let effectiveUrl = urlRewriter.rewrite(url);
                 let promise=window.fetchUrl(method, url, logId);
-                urlRewriter.appContext="";
+                urlRewriter.prefix=null;
                 return promise;
             };
             
@@ -400,8 +405,6 @@
             };
             
             function selectText(node) {
-//                node = document.getElementById(node);
-
                 if (document.body.createTextRange) {
                     const range = document.body.createTextRange();
                     range.moveToElementText(node);

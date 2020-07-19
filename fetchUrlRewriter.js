@@ -7,11 +7,19 @@ function startsWith(string, prefix) {
 }
 
 const urlRewriter={
-    appContext: "",
+    prefix: null,
     rewrite: function(requestedUrl) {
         let effectiveUrl = requestedUrl;
-        if (!isAbsolutUrl(effectiveUrl) && !startsWith(effectiveUrl, this.appContext)) {
-            effectiveUrl = this.appContext + "/" + effectiveUrl;
+        let effectivePrefix;
+        const metaElement=document.querySelector('meta[name="fetchUrlPrefix"]');
+        if(metaElement) {
+            effectivePrefix=metaElement.content;
+        }
+        if(this.prefix) {
+            effectivePrefix=this.prefix;
+        }
+        if (!isAbsolutUrl(effectiveUrl) && !startsWith(effectiveUrl, effectivePrefix)) {
+            effectiveUrl = effectivePrefix + "/" + effectiveUrl;
         }
         return effectiveUrl;
     }
