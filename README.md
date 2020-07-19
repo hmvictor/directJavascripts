@@ -17,4 +17,4 @@ A small class to abstract an execution. Helpful to reflect user interface state 
 urlRewriter.js
 Add a context base url to applications.
 
-See more at [https://hmvictor.github.io/directJavascripts/]
+See more at https://hmvictor.github.io/directJavascripts/
