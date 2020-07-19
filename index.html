@@ -172,9 +172,13 @@
                             import {hashLocationTracker} from "./hashLocationTracker.js";
                             <br/>
                             <br/>
-                            //Register function to execute for a regexp pattern, the function receives the match result to extract groups for parameterized locations
+                            /*
                             <br/>
-                            //Pattern is matched againts the whole hash location.
+                            Register function to execute for a regexp pattern, start and end line characters are addded automatically to match
+                            the whole hash location. 
+                            When invoked, the function receives the match result to extract groups for parameterized locations.
+                            <br/>
+                            */
                             <br/>
                             hashLocationTracker.given("#/index").then(matchResult => {});
                             <br/>
@@ -337,7 +341,7 @@
                 document.getElementById("exampleLabel").innerHTML="Example:";
             });
             
-            hashLocationTracker.processCurrent();
+            hashLocationTracker.matchNow();
             
             window.fetchUrl=function(method, url, logId) {
                 window.logId=logId;

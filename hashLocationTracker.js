@@ -3,7 +3,7 @@ class HashLocationTracker {
     constructor() {
         this.registerByPattern={};
         window.addEventListener("hashchange", () => {
-            this.processCurrent();
+            this.matchNow();
         });
     }
     
@@ -22,7 +22,7 @@ class HashLocationTracker {
         return registered;
     }
 
-    processCurrent() {
+    matchNow() {
         let hash=window.location.hash;
         console.log("hash: "+window.location.hash);
         for(let pattern in this.registerByPattern) {
