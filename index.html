@@ -112,12 +112,16 @@
                         }
                     });
                     window.addEventListener("fetchResponseSuccess", event => {
-                        event.detail.response.json().then(content => {
-                            document.getElementById(window.logId).innerHTML+="<br/>Fetch response success. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Response: "+content+".";
-                        });
+                        if(window.logId) {
+                            event.detail.response.json().then(jsonResponse => {
+                                document.getElementById(window.logId).innerHTML+="<br/>Fetch response success. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Response: "+jsonResponse+".";
+                            });
+                        }
                     });
                     window.addEventListener("fetchResponseError", event => {
-                        document.getElementById(window.logId).innerHTML+="<br/>Fetch response error. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Status: ["+event.detail.response.status+"]";
+                        if(window.logId) {
+                            document.getElementById(window.logId).innerHTML+="<br/>Fetch response error. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Status: ["+event.detail.response.status+"]";
+                        }
                     });
                     window.addEventListener("fetchError", event => {
                         if(window.logId) {

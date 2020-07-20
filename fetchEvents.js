@@ -22,7 +22,7 @@ window.fetch = function(url, init) {
                         response: response
                     }
                 }));
-        } if(response.status >= 400 && response.status < 600) {
+        } else if(response.status >= 400 && response.status < 600) {
             window.dispatchEvent(
                 new CustomEvent("fetchResponseError", {
                     detail: {
