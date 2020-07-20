@@ -18,8 +18,10 @@ const urlRewriter={
         if(this.prefix) {
             effectivePrefix=this.prefix;
         }
-        if (!isAbsolutUrl(effectiveUrl) && !startsWith(effectiveUrl, effectivePrefix)) {
-            effectiveUrl = effectivePrefix + "/" + effectiveUrl;
+        if(effectivePrefix) {
+            if (!isAbsolutUrl(effectiveUrl) && !startsWith(effectiveUrl, effectivePrefix)) {
+                effectiveUrl = effectivePrefix + "/" + effectiveUrl;
+            }
         }
         return effectiveUrl;
     }
