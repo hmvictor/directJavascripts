@@ -19,27 +19,41 @@
                 <div class="form-group">
                     <h2>fetchEvents.js - Document Scope Fetch Events</h2>
                     <br/>
-                    <p>Add event listeners to the document object and execute code when a fetch happens.</p>
+                    <p>Add event listeners to the window object and execute code when a fetch happens.</p>
                     <table class="table table-sm">
                         <caption>Available events</caption>
                         <thead>
                             <tr>
                                 <th>Event Name</th>
+                                <th>Description</th>
                                 <th>Event Detail Properties</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><code>fetchStart</code></td>
+                                <td>Right before the fetch is started</td>
                                 <td><code>event.detail.url, event.detail.init</code></td>
                             </tr>
                             <tr>
-                                <td><code>fetchComplete</code></td>
+                                <td><code>fetchResponseSuccess</code></td>
+                                <td>When the response status is in 200-299 range.</td>
                                 <td><code>event.detail.url, event.detail.init, event.detail.response</code></td>
                             </tr>
                             <tr>
-                                <td><code>fetchFail</code></td>
+                                <td><code>fetchResponseError</code></td>
+                                <td>When the response status is in 400-599 range.</td>
+                                <td><code>event.detail.url, event.detail.init, event.detail</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>fetchError</code></td>
+                                <td>When there was any network error.</td>
                                 <td><code>event.detail.url, event.detail.init, event.detail.error</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>fetchComplete</code></td>
+                                <td>Final event independently if there was an error or response.</td>
+                                <td><code>event.detail.url, event.detail.init, event.detail.response (if there was a response), event.detail.error (if there was an error)</code></td>
                             </tr>
                         </tbody>
                     </table>
@@ -74,11 +88,11 @@
                         <code>
                             //Register listeners in javascript
                             <br/>
-                            document.addEventListener("fetchStart", event => {});
+                            window.addEventListener("fetchStart", event => {});
                             <br/>
-                            document.addEventListener("fetchComplete", event => {});
+                            window.addEventListener("fetchResponseSuccess", event => {});
                             <br/>
-                            document.addEventListener("fetchFail", event => {});
+                            window.addEventListener("fetchError", event => {});
                         </code>
                     </p>
                     <div>
@@ -92,21 +106,22 @@
                     <br/>
                 </div>
                 <script type="module">
-                    document.addEventListener("fetchStart", event => {
+                    window.addEventListener("fetchStart", event => {
                         if(window.logId) {
                             document.getElementById(window.logId).innerHTML="Fetch start. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]";
                         }
                     });
-                    document.addEventListener("fetchComplete", event => {
-                        if(window.logId && event.detail.response.status === 200) {
-                            event.detail.response.json().then(content => {
-                                document.getElementById(window.logId).innerHTML+="<br/>Fetch complete. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Response: "+content+".";
-                            });
-                        }
+                    window.addEventListener("fetchResponseSuccess", event => {
+                        event.detail.response.json().then(content => {
+                            document.getElementById(window.logId).innerHTML+="<br/>Fetch response success. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Response: "+content+".";
+                        });
                     });
-                    document.addEventListener("fetchFail", event => {
+                    window.addEventListener("fetchResponseError", event => {
+                        document.getElementById(window.logId).innerHTML+="<br/>Fetch response error. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Status: ["+event.detail.response.status+"]";
+                    });
+                    window.addEventListener("fetchError", event => {
                         if(window.logId) {
-                            document.getElementById(window.logId).innerHTML+="<br/>Fetch fail. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"].";
+                            document.getElementById(window.logId).innerHTML+="<br/>Fetch error. Url: ["+event.detail.url+"]. HTTP Method: ["+event.detail.init.method+"]. Error: "+event.detail.error;
                         }
                     });
                 </script>

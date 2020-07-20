@@ -1,6 +1,6 @@
 const proxiedFetch = window.fetch;
 window.fetch = function(url, init) {
-    document.dispatchEvent(
+    window.dispatchEvent(
         new CustomEvent(
             "fetchStart", 
             {
@@ -12,22 +12,51 @@ window.fetch = function(url, init) {
         )
     );
     const promise=proxiedFetch.apply(this, arguments);
-    promise.then((response) => {
-        document.dispatchEvent(new CustomEvent("fetchComplete", {
-            detail: {
-                url: url,
-                init: init,
-                response: response
-            }
-        }));
-    }, (error) => {
-        document.dispatchEvent(new CustomEvent("fetchFail", {
-            detail: {
-                url: url,
-                init: init,
-                error: error
-            }
-        }));
+    promise.then(response => {
+        if(response.ok) {
+            window.dispatchEvent(
+                new CustomEvent("fetchResponseSuccess", {
+                    detail: {
+                        url: url,
+                        init: init,
+                        response: response
+                    }
+                }));
+        } if(response.status >= 400 && response.status < 600) {
+            window.dispatchEvent(
+                new CustomEvent("fetchResponseError", {
+                    detail: {
+                        url: url,
+                        init: init,
+                        response: response
+                    }
+                }));
+        }
+        window.dispatchEvent(
+            new CustomEvent("fetchComplete", {
+                detail: {
+                    url: url,
+                    init: init,
+                    response: response
+                }
+            }));
+    }, error => {
+        window.dispatchEvent(
+            new CustomEvent("fetchError", {
+                detail: {
+                    url: url,
+                    init: init,
+                    error: error
+                }
+            }));
+        window.dispatchEvent(
+            new CustomEvent("fetchComplete", {
+                detail: {
+                    url: url,
+                    init: init,
+                    error: error
+                }
+            }));
     });
     return promise;
 };
